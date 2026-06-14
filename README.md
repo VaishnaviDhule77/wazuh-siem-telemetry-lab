@@ -12,7 +12,36 @@ This project demonstrates the end-to-end deployment, configuration, and validati
 * **Threat Simulation & Log Analysis:** Windows Event Subsystem architecture, defensive telemetry validation, structured JSON log analysis.
 
 ---
+## 🔍 Deep-Dive Telemetry Breakdowns (Log Analysis)
 
+Rather than just capturing high-level alerts, the telemetry ingested from the Windows host was fully parsed and contextualized by the SIEM engine. Below is an engineering breakdown of the structural parameters extracted during the event simulation:
+
+### 1. Ingestion & Endpoint Identity Context
+* **Log Source IP:** `192.168.56.1`
+* **Agent Asset Name:** `Windows-Host-Laptop` (Agent ID: `001`)
+* **Decoder Engine:** `windows_eventchannel`
+* **Storage Index Platform:** `wazuh-alerts-4.x-2026.06.14`
+
+### 2. Windows Subsystem Tracking Data
+* **Windows Event ID:** `1102` (The formal code for a cleared audit log container)
+* **Target Logging Channel:** `Security`
+* **Triggering Process ID:** `1180`
+* **System Event Record ID:** `1429733`
+
+### 3. Subject Identity (Who committed the action)
+* **Subject Account Name:** `vdhul`
+* **Subject Domain Identity:** `VAISHNAVI`
+* **Unique Security Identifier (SID):** `S-1-5-21-1785008593-1839370444-2047398026-1001`
+* **Logon Session Reference ID:** `0x4F3397`
+
+### 4. Threat Framework Categorization
+* **Rule ID Assignment:** `63103` (Level 5 Security Classification Alert)
+* **Rule Functional Groups:** `windows`, `windows_logs`, `log_clearing_auditlog`
+* **MITRE ATT&CK Tactic:** `Defense Evasion`
+* **MITRE ATT&CK Technique:** `Indicator Removal (T1070)`
+* **Event Rule Description:** `The audit log was cleared`
+
+  
 Phase-by-Phase Implementation
 Phase 1: Virtual Infrastructure Provisioning
 Deployed the Linux-based Wazuh SIEM virtual appliance (v4.14.5) within Oracle VirtualBox.
