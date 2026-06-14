@@ -12,36 +12,7 @@ This project demonstrates the end-to-end deployment, configuration, and validati
 * **Threat Simulation & Log Analysis:** Windows Event Subsystem architecture, defensive telemetry validation, structured JSON log analysis.
 
 ---
-## 🔍 Deep-Dive Telemetry Breakdowns (Log Analysis)
 
-Rather than just capturing high-level alerts, the telemetry ingested from the Windows host was fully parsed and contextualized by the SIEM engine. Below is an engineering breakdown of the structural parameters extracted during the event simulation:
-
-### 1. Ingestion & Endpoint Identity Context
-* **Log Source IP:** `192.168.56.1`
-* **Agent Asset Name:** `Windows-Host-Laptop` (Agent ID: `001`)
-* **Decoder Engine:** `windows_eventchannel`
-* **Storage Index Platform:** `wazuh-alerts-4.x-2026.06.14`
-
-### 2. Windows Subsystem Tracking Data
-* **Windows Event ID:** `1102` (The formal code for a cleared audit log container)
-* **Target Logging Channel:** `Security`
-* **Triggering Process ID:** `1180`
-* **System Event Record ID:** `1429733`
-
-### 3. Subject Identity (Who committed the action)
-* **Subject Account Name:** `vdhul`
-* **Subject Domain Identity:** `VAISHNAVI`
-* **Unique Security Identifier (SID):** `S-1-5-21-1785008593-1839370444-2047398026-1001`
-* **Logon Session Reference ID:** `0x4F3397`
-
-### 4. Threat Framework Categorization
-* **Rule ID Assignment:** `63103` (Level 5 Security Classification Alert)
-* **Rule Functional Groups:** `windows`, `windows_logs`, `log_clearing_auditlog`
-* **MITRE ATT&CK Tactic:** `Defense Evasion`
-* **MITRE ATT&CK Technique:** `Indicator Removal (T1070)`
-* **Event Rule Description:** `The audit log was cleared`
-
-  
 Phase-by-Phase Implementation
 Phase 1: Virtual Infrastructure Provisioning
 Deployed the Linux-based Wazuh SIEM virtual appliance (v4.14.5) within Oracle VirtualBox.
@@ -58,20 +29,70 @@ Provisioned the host-level collector endpoint by executing an optimized administ
 Initiated the background sensor service (NET START Wazuh) and verified connection status viability on the centralized dashboard management frame.
 
 Phase 3: Threat Simulation & Analytical Validation
-Executed a programmatic threat simulation modeling MITRE ATT&CK T1070.001 (Indicator Removal on Host: Clear Windows Event Logs) by executing:
+Executed a programmatic threat simulation modeling MITRE ATT&CK T1070.001 (Indicator Removal on Host: Clear Windows Event Logs) by running the following command in an administrative PowerShell terminal:
 
 PowerShell
   wevtutil cl Security
-Analyzed the server's real-time detection pipeline, validating that the incoming Windows Event ID 1102 string mapped flawlessly to security rule ID 60122.
+Analyzed the server's real-time detection pipeline, validating that the incoming Windows Event ID 1102 string mapped flawlessly to security rule ID 63103 (Severity Level 5).
 
 Inspected the underlying parsed, structured JSON metadata payload containing contextual security account indicators (Logon ID, Account Domain, unique identifier strings).
 
-Evidence of Completion
-1. Active Agent Telemetry
-The endpoint monitor dashboard shows the host endpoint successfully checking in over the secure private network pipeline:
+🔍 Deep-Dive Telemetry Breakdowns (Log Analysis)
+Rather than just capturing high-level alerts, the telemetry ingested from the Windows host was fully parsed and contextualized by the SIEM engine. Below is an engineering breakdown of the structural parameters extracted during the event simulation:
 
-2. High-Severity Threat Alert Triggered
-The SIEM Discovery search engine indexing and surfacing the real-time defense evasion behavior event:
+1. Ingestion & Endpoint Identity Context
+Log Source IP: 192.168.56.1
+
+Agent Asset Name: Windows-Host-Laptop (Agent ID: 001)
+
+Decoder Engine: windows_eventchannel
+
+Storage Index Platform: wazuh-alerts-4.x-2026.06.14
+
+2. Windows Subsystem Tracking Data
+Windows Event ID: 1102 (The formal code for a cleared audit log container)
+
+Target Logging Channel: Security
+
+Triggering Process ID: 1180
+
+System Event Record ID: 1429733
+
+3. Subject Identity (Who committed the action)
+Subject Account Name: vdhul
+
+Subject Domain Identity: VAISHNAVI
+
+Unique Security Identifier (SID): S-1-5-21-1785008593-1839370444-2047398026-1001
+
+Logon Session Reference ID: 0x4F3397
+
+4. Threat Framework Categorization
+Rule ID Assignment: 63103 (Level 5 Security Classification Alert)
+
+Rule Functional Groups: windows, windows_logs, log_clearing_auditlog
+
+MITRE ATT&CK Tactic: Defense Evasion
+
+MITRE ATT&CK Technique: Indicator Removal (T1070)
+
+Event Rule Description: The audit log was cleared
+
+Evidence of Completion (Visual Verification Logs)
+1. Ingested Threat Alert Stream Overview
+The SIEM Discovery engine indexing and surfacing the real-time defense evasion behavior event payload:
+
+2. Endpoint & Client Process Metadata
+Verification of host-level endpoint identification telemetry strings and execution mappings:
+
+3. User Subject Identity & Account Mapping
+Granular event tracing identifying the explicit account security context indicators responsible for the change:
+
+4. Decoding Engine Parameters
+The background translation parser isolating the raw system telemetry channel:
+
+5. MITRE ATT&CK Adversary Technique Correlation
+Automated rule association framework mapping the log clearance event directly to industry-recognized attacker behavior matrix indicators:
 
 Project Takeaways & Practical Insights
 Log Ingestion Integrity: Gained hands-on experience confirming that system log streams can be captured and processed continuously across disparate operating systems.
@@ -105,4 +126,3 @@ Defensive Mindset: Validated the crucial operational concept that attackers tryi
  │   │  (Analyzes Event 1102)│  Internal Pipe  │   (Visual Log Feed)  │   │
  │   └───────────────────────┘                 └──────────────────────┘   │
  └────────────────────────────────────────────────────────────────────────┘
-
